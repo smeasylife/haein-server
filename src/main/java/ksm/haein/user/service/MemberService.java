@@ -24,7 +24,8 @@ public class MemberService {
         Member member = memberRepository.save(Member.builder()
                 .email(signUpRequestForm.getEmail())
                 .password(passwordEncoder.encode(signUpRequestForm.getPassword()))
-                .name(signUpRequestForm.getName())
+                .nickname(signUpRequestForm.getNickname())
+                .phoneNumber(signUpRequestForm.getPhoneNumber())
                 .build());
 
         memberRepository.save(member);
