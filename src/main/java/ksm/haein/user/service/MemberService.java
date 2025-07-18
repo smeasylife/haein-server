@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final CredentialRepository credentialRepository;
+    private final CredentialService credentialService;
 
-
+    @Transactional
     public void localLogin(SignUpRequestForm signUpRequestForm) {
         Member member = saveMember(signUpRequestForm);
+        credentialService.saveLocalCredential(signUpRequestForm, member);
     }
 
     @Transactional
@@ -29,7 +29,6 @@ public class MemberService {
 
         Member member = memberRepository.save(Member.builder()
                 .email(signUpRequestForm.getEmail())
-                .password(passwordEncoder.encode(signUpRequestForm.getPassword()))
                 .nickname(signUpRequestForm.getNickname())
                 .phoneNumber(signUpRequestForm.getPhoneNumber())
                 .build());
@@ -43,10 +42,5 @@ public class MemberService {
                 .ifPresent(m -> {
                     throw new MemberNotFoundException("Already existing username");
                 });
-    }
-
-    private Member getUserIfNotExistsSignup(String email, String nickname) {
-        return userRepository.findByEmail(email)
-                .orElseGet(() -> userService.save(email, name));
     }
 }

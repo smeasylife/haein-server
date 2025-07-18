@@ -17,7 +17,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody SignUpRequestForm signUpRequestForm) {
-        memberService.saveMember(signUpRequestForm);
+        memberService.localLogin(signUpRequestForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
