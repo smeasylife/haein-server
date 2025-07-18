@@ -1,6 +1,7 @@
 package ksm.haein.auth.utils;
 
 import ksm.haein.auth.dto.KakaoTokenResponse;
+import ksm.haein.auth.dto.KakaoUserInfo;
 import ksm.haein.auth.exception.KakaoAccessTokenRequestException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,5 +42,15 @@ public class KakaoUtils {
         }
 
         return tokenResponse.accessToken();
+    }
+
+    public KakaoUserInfo getUserInfo(String accessToken) {
+        return webClient.get()
+                .uri(userInfoUri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8")
+                .retrieve()
+                .bodyToMono(KakaoUserInfo.class)
+                .block();
     }
 }
