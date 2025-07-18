@@ -1,30 +1,27 @@
 package ksm.haein.user.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.user.enums.IdentityProvider;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Member {
+public class Credential {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String nickname;
+    private IdentityProvider identityProvider;
 
-    @Column(unique = true)
-    private String email;
+    private String password;
 
-    private String phoneNumber;
-
-    private LocalDateTime createdAt;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

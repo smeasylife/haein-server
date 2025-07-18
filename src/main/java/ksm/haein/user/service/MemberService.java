@@ -3,6 +3,7 @@ package ksm.haein.user.service;
 import ksm.haein.user.dto.SignUpRequestForm;
 import ksm.haein.user.entity.Member;
 import ksm.haein.user.exception.MemberNotFoundException;
+import ksm.haein.user.repository.CredentialRepository;
 import ksm.haein.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CredentialRepository credentialRepository;
 
+
+    public void localLogin(SignUpRequestForm signUpRequestForm) {
+        Member member = saveMember(signUpRequestForm);
+    }
 
     @Transactional
     public Member saveMember(SignUpRequestForm signUpRequestForm){
@@ -35,7 +41,12 @@ public class MemberService {
     private void validateDuplicatedUsername(String email){
         memberRepository.findByEmail(email)
                 .ifPresent(m -> {
-                    throw new MemberNotFoundException("Already existion username");
+                    throw new MemberNotFoundException("Already existing username");
                 });
+    }
+
+    private Member getUserIfNotExistsSignup(String email, String nickname) {
+        return userRepository.findByEmail(email)
+                .orElseGet(() -> userService.save(email, name));
     }
 }
