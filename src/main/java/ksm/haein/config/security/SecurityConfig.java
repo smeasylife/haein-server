@@ -21,6 +21,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
+                .cors(cors -> cors
+                        .configurationSource(CorsConfig.corsConfigurationSource())
+                )
                 .sessionManagement(session -> session
                         .sessionFixation(f -> f.migrateSession())
                         .maximumSessions(1).maxSessionsPreventsLogin(true)
