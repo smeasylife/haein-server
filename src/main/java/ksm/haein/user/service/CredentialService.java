@@ -17,13 +17,22 @@ public class CredentialService {
     private final CredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Credential saveLocalCredential(SignUpRequestForm signUpRequestForm, Member member) {
+    public void saveLocalCredential(SignUpRequestForm signUpRequestForm, Member member) {
         Credential credential = Credential.builder()
                 .member(member)
                 .password(passwordEncoder.encode(signUpRequestForm.getPassword()))
                 .identityProvider(IdentityProvider.LOCAL)
                 .build();
 
-        return credentialRepository.save(credential);
+        credentialRepository.save(credential);
+    }
+
+    public void saveKakaoCredential(Member member) {
+        Credential credential = Credential.builder()
+                .member(member)
+                .identityProvider(IdentityProvider.KAKAO)
+                .build();
+
+        credentialRepository.save(credential);
     }
 }

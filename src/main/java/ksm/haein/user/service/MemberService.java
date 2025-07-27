@@ -43,4 +43,21 @@ public class MemberService {
                     throw new MemberNotFoundException("Already existing username");
                 });
     }
+
+    private Member saveKakaoMember(String email, String nickname) {
+        validateDuplicatedUsername(email);
+
+        Member member = memberRepository.save(Member.builder()
+                .email(email)
+                .nickname(nickname)
+                .build());
+
+        credentialService.saveKakaoCredential(member);
+        return memberRepository.save(member);
+    }
+
+    public Member getUserIfNotExistsSignup(String email, String nickname) {
+        return memberRepository.findByEmail(email)
+                .orElseGet(() -> saveKakaoMember(email, nickname));
+    }
 }

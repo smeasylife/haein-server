@@ -1,5 +1,6 @@
 package ksm.haein.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ksm.haein.auth.dto.KakaoAuthcode;
 import ksm.haein.auth.service.AuthService;
@@ -17,7 +18,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/kakao/login")
-    public ResponseEntity<String> getAuthCode(@RequestBody KakaoAuthcode kakaoAuthcode, HttpServletResponse response){
+    public ResponseEntity<String> getAuthCode(@RequestBody KakaoAuthcode kakaoAuthcode,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response){
         authService.doKakaoLogin(kakaoAuthcode.authcode(), response);
         return ResponseEntity.ok().body("Login successful");
     }

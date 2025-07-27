@@ -17,4 +17,12 @@ public record KakaoUserInfo(
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Properties(String nickname) {}
+
+    public String getEmail() {
+        return kakaoAccount.email();
+    }
+
+    public String getNickname() {
+        return properties.nickname();
+    }
 }
