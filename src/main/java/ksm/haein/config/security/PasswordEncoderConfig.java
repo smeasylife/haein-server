@@ -1,4 +1,4 @@
-package ksm.haein.auth.config;
+package ksm.haein.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
