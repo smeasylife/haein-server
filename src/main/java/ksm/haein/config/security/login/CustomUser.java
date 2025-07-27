@@ -1,37 +1,40 @@
 package ksm.haein.config.security.login;
 
+import ksm.haein.user.dto.MemberLoginData;
 import ksm.haein.user.entity.Credential;
 import ksm.haein.user.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DefaultUser implements UserDetails {
-    private final Member member;
-    private final Credential credential;
+public class CustomUser implements UserDetails {
+    private final MemberLoginData memberLoginData;
     private final List<GrantedAuthority> authorities;
 
-    public DefaultUser(Member member) {
-        this.member = member;
-        this.authorities = new ArrayList<>();
+    public CustomUser(MemberLoginData memberLoginData) {
+        this.memberLoginData = memberLoginData;
+        this.authorities = List.of(
+                new SimpleGrantedAuthority(memberLoginData.getRole().name())
+        );
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return memberLoginData.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return memberLoginData.getEmail();
     }
 }

@@ -1,5 +1,6 @@
 package ksm.haein.user.service;
 
+import ksm.haein.user.dto.MemberLoginData;
 import ksm.haein.user.dto.SignUpRequestForm;
 import ksm.haein.user.entity.Member;
 import ksm.haein.user.exception.MemberNotFoundException;
@@ -59,5 +60,9 @@ public class MemberService {
     public Member getUserIfNotExistsSignup(String email, String nickname) {
         return memberRepository.findByEmail(email)
                 .orElseGet(() -> saveKakaoMember(email, nickname));
+    }
+
+    public MemberLoginData getMemberLoginData(String email) {
+        return memberRepository.findMemberLoginDataByEmail(email).orElseThrow(MemberNotFoundException::new);
     }
 }
