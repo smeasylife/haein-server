@@ -1,6 +1,7 @@
 package ksm.haein.user.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.user.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class Member {
     private String email;
 
     private String phoneNumber;
+
+    private Role role;
 
     private LocalDateTime createdAt;
 }

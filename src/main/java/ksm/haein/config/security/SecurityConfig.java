@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
+    private final SimpleUrlAuthenticationSuccessHandler authenticationSuccessHandler;
 
     private static final List<WhiteList> WHITE_LISTS = List.of(
             new WhiteList(HttpMethod.POST, "/auth/kakao/login")
@@ -31,6 +33,13 @@ public class SecurityConfig {
                             requests.requestMatchers(whiteList.method(), whiteList.url()).permitAll());
                     requests.anyRequest().authenticated();
                     }
+                )
+                .formLogin(form -> form
+                        .loginPage("http://localhost:3000/login")
+                        .loginProcessingUrl("/login")
+                        .permitAll()
+                        .usernameParameter("email")
+                        .successHandler(authenticationSuccessHandler)
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
