@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
+    private final LogoutSuccessHandler logoutSuccessHandler;
     private final SimpleUrlAuthenticationSuccessHandler authenticationSuccessHandler;
 
     private static final List<WhiteList> WHITE_LISTS = List.of(
@@ -40,6 +42,11 @@ public class SecurityConfig {
                         .permitAll()
                         .usernameParameter("email")
                         .successHandler(authenticationSuccessHandler)
+                )
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                        .deleteCookies("JSESSIONID")
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
