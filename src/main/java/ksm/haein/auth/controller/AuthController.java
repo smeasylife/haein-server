@@ -21,7 +21,7 @@ public class AuthController {
     public ResponseEntity<String> getAuthCode(@RequestBody KakaoAuthcode kakaoAuthcode,
                                               HttpServletRequest request,
                                               HttpServletResponse response){
-        authService.doKakaoLogin(kakaoAuthcode.authcode(), response);
+        authService.doKakaoLogin(kakaoAuthcode.authcode(), request ,response);
         return ResponseEntity.ok().body("Login successful");
     }
 }
