@@ -1,9 +1,8 @@
 package ksm.haein.user.service;
 
 import ksm.haein.config.mail.MyMailServiceConfig;
+import ksm.haein.user.exception.MailSendException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @EnableConfigurationProperties(MyMailServiceConfig.class)
 public class MailService {
@@ -29,10 +27,8 @@ public class MailService {
             simpleMailMessage.setText("인증번호는 [" + generateRandomCode(to) + "] 입니다.");
             javaMailSender.send(simpleMailMessage);
 
-            log.info("메일 발송 성공!");
         } catch (Exception e) {
-            log.info("메일 발송 실패!");
-            throw new RuntimeException(e);
+            throw new MailSendException("메일 발송 실패!");
         }
     }
 
