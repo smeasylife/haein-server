@@ -1,14 +1,13 @@
 package ksm.haein.item.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Entity
-
+@Getter
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +28,7 @@ public class Item {
     private String information;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private ArrayList<ItemPicture> pictures = new ArrayList<>();
 }
