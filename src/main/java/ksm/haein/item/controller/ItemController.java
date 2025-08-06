@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ItemController {
     private final ItemService itemService;
 
-    @GetMapping("")
+    @GetMapping("/items")
     public String getHomeItems() {
 
     }
+
+
 }

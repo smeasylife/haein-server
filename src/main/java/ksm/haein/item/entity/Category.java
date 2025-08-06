@@ -1,6 +1,7 @@
 package ksm.haein.item.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.item.enums.CategoryName;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -12,7 +13,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private CategoryName name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private ArrayList<ItemCategory> itemCategories = new ArrayList<>();
