@@ -1,6 +1,7 @@
 package ksm.haein.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,7 +25,9 @@ public class SecurityConfig {
     private final SimpleUrlAuthenticationSuccessHandler authenticationSuccessHandler;
 
     private static final List<WhiteList> WHITE_LISTS = List.of(
-            new WhiteList(HttpMethod.POST, "/auth/kakao/login")
+            new WhiteList(HttpMethod.POST, "/auth/kakao/login"),
+            new WhiteList(HttpMethod.POST, "/signup/send-code"),
+            new WhiteList(HttpMethod.POST, "/signup/verify-code")
     );
 
     @Bean
