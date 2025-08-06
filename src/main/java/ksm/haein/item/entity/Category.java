@@ -3,6 +3,8 @@ package ksm.haein.item.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+
 @Entity
 @Getter
 public class Category {
@@ -12,7 +14,6 @@ public class Category {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
+    private ArrayList<ItemCategory> itemCategories = new ArrayList<>();
 }

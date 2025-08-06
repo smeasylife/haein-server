@@ -31,4 +31,7 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private ArrayList<ItemPicture> pictures = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private ArrayList<ItemCategory> itemCategories = new ArrayList<>();
 }
