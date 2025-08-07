@@ -2,6 +2,7 @@ package ksm.haein.item.entity;
 
 import jakarta.persistence.*;
 import ksm.haein.like.entity.Like;
+import ksm.haein.review.entity.Review;
 import lombok.Getter;
 
 import java.lang.reflect.Array;
@@ -39,4 +40,7 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private ArrayList<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private ArrayList<Review> reviews = new ArrayList<>();
 }

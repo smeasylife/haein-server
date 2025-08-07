@@ -3,10 +3,18 @@ package ksm.haein.review.entity;
 import jakarta.persistence.*;
 import ksm.haein.item.entity.Item;
 import ksm.haein.user.entity.Member;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
