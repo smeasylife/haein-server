@@ -15,8 +15,8 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/items")
-    public List<ItemData> getHomeItems(@RequestParam int page, @RequestParam int size) {
-        return itemService.getItemData(size, page);
+    public List<ItemData> getHomeItems(@RequestParam int page) {
+        return itemService.getItemData(page);
     }
 
 

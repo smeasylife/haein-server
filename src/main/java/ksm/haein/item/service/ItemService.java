@@ -17,8 +17,8 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    public List<ItemData> getItemData(int size, int page) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<ItemData> getItemData( int page) {
+        Pageable pageable = PageRequest.of(page, 12);
         Page<ItemData> pageData = itemRepository.findItemByPage(pageable);
         return pageData.getContent();
     }

@@ -1,12 +1,14 @@
 package ksm.haein.user.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.like.entity.Like;
 import ksm.haein.user.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -29,4 +31,7 @@ public class Member {
     private Role role;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private ArrayList<Like> likes = new ArrayList<>();
 }

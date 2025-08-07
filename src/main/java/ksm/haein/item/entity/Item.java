@@ -1,8 +1,10 @@
 package ksm.haein.item.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.like.entity.Like;
 import lombok.Getter;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -34,4 +36,7 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private ArrayList<ItemCategory> itemCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private ArrayList<Like> likes = new ArrayList<>();
 }
