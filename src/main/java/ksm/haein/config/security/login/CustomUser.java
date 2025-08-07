@@ -22,7 +22,6 @@ public class CustomUser implements UserDetails {
         );
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -36,5 +35,9 @@ public class CustomUser implements UserDetails {
     @Override
     public String getUsername() {
         return memberLoginData.getEmail();
+    }
+
+    public Long getId() {
+        return memberLoginData.getMemberId();
     }
 }
