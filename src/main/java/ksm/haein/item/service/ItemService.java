@@ -17,9 +17,15 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    public List<ItemData> getItemData( int page) {
+    public List<ItemData> getItemDataWithoutLike(int page) {
         Pageable pageable = PageRequest.of(page, 12);
-        Page<ItemData> pageData = itemRepository.findItemByPage(pageable);
+        Page<ItemData> pageData = itemRepository.findItemByPageWithoutLike(pageable);
+        return pageData.getContent();
+    }
+
+    public List<ItemData> getItemDataWithLike(int page, long memberId) {
+        Pageable pageable = PageRequest.of(page, 12);
+        Page<ItemData> pageData = itemRepository.findItemByPageWithLike(pageable, memberId);
         return pageData.getContent();
     }
 }
