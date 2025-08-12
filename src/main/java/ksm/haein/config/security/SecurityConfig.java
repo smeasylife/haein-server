@@ -51,10 +51,9 @@ public class SecurityConfig {
                         .logoutSuccessHandler(logoutSuccessHandler)
                         .deleteCookies("JSESSIONID")
                 )
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                )
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .cors(cors -> cors
                         .configurationSource(CorsConfig.corsConfigurationSource())
                 )
