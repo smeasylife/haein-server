@@ -3,11 +3,9 @@ package ksm.haein.user.service;
 import ksm.haein.user.dto.MemberLoginData;
 import ksm.haein.user.dto.SignUpRequestForm;
 import ksm.haein.user.entity.Member;
-import ksm.haein.user.exception.MemberNotFoundException;
-import ksm.haein.user.repository.CredentialRepository;
+import ksm.haein.user.exception.MemberAlreadyExistsException;
 import ksm.haein.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,7 @@ public class MemberService {
     private final CredentialService credentialService;
 
     @Transactional
-    public void localLogin(SignUpRequestForm signUpRequestForm) {
+    public void localSignup(SignUpRequestForm signUpRequestForm) {
         Member member = saveMember(signUpRequestForm);
         credentialService.saveLocalCredential(signUpRequestForm, member);
     }
@@ -41,7 +39,7 @@ public class MemberService {
     private void validateDuplicatedUsername(String email){
         memberRepository.findByEmail(email)
                 .ifPresent(m -> {
-                    throw new MemberNotFoundException("Already existing username");
+                    throw new MemberAlreadyExistsException("Already existing username");
                 });
     }
 
@@ -63,6 +61,6 @@ public class MemberService {
     }
 
     public MemberLoginData getMemberLoginData(String email) {
-        return memberRepository.findMemberLoginDataByEmail(email).orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findMemberLoginDataByEmail(email).orElseThrow(MemberAlreadyExistsException::new);
     }
 }

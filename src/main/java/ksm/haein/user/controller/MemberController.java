@@ -9,7 +9,6 @@ import ksm.haein.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +23,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody SignUpRequestForm signUpRequestForm) {
-        memberService.localLogin(signUpRequestForm);
+        memberService.localSignup(signUpRequestForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
