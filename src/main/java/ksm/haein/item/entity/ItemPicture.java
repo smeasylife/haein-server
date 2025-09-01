@@ -1,8 +1,10 @@
 package ksm.haein.item.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class ItemPicture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

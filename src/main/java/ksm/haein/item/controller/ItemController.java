@@ -28,7 +28,7 @@ public class ItemController {
 
     @GetMapping("/items/{itemId}")
     public DetailItemData getDetailItemData(@RequestParam long itemId) {
-
+        return itemService.getDetailItemData(itemId);
     }
 
 

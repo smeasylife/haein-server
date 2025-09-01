@@ -1,6 +1,9 @@
 package ksm.haein.item.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import ksm.haein.item.dto.DetailItemData;
 import ksm.haein.item.dto.ItemData;
+import ksm.haein.item.entity.Item;
 import ksm.haein.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,5 +30,11 @@ public class ItemService {
         Pageable pageable = PageRequest.of(page, 12);
         Page<ItemData> pageData = itemRepository.findItemByPageWithLike(pageable, memberId);
         return pageData.getContent();
+    }
+
+    public DetailItemData getDetailItemData(long itemId) {
+        Item item = itemRepository.findItemWithDetailsById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("Item not found with id: " + itemId));
+        return new DetailItemData(item);
     }
 }

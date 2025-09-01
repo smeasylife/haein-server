@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
@@ -19,4 +22,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "LEFT JOIN i.pictures p ON p.id = (SELECT MIN(p2.id) FROM ItemPicture p2 WHERE p2.item = i)" +
             "LEFT JOIN Like l ON l.item = i AND l.member.id = :memberId")
     Page<ItemData> findItemByPageWithLike(Pageable pageable, Long memberId);
+
+    @Query("SELECT i FROM Item i " +
+           "LEFT JOIN FETCH i.pictures " +
+           "LEFT JOIN FETCH i.reviews " +
+           "LEFT JOIN FETCH i.questions " +
+           "WHERE i.id = :id")
+    Optional<Item> findItemWithDetailsById(@Param("id") Long id);
 }
