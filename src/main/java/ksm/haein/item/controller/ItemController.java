@@ -1,6 +1,7 @@
 package ksm.haein.item.controller;
 
 import ksm.haein.config.security.login.CustomUser;
+import ksm.haein.item.dto.DetailItemData;
 import ksm.haein.item.dto.ItemData;
 import ksm.haein.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class ItemController {
         }
 
         return itemService.getItemDataWithLike(page, customUser.getId());
+    }
+
+    @GetMapping("/items/{itemId}")
+    public DetailItemData getDetailItemData(@RequestParam long itemId) {
+
     }
 
 
