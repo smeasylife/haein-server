@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class QuestionDto {
-    private String question;
+    private String content;
     private String answer;
     private LocalDateTime createdAt;
 
-    public QuestionDto(Question question) {
-        this.question = question.getQuestion();
-        this.answer = question.getAnswer();
-        this.createdAt = question.getCreatedAt();
+    public QuestionDto(Question content) {
+        this.content = content.getContent();
+        this.answer = content.getAnswer();
+        this.createdAt = content.getCreatedAt();
     }
 }

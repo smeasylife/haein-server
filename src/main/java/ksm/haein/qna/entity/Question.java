@@ -3,18 +3,26 @@ package ksm.haein.qna.entity;
 import jakarta.persistence.*;
 import ksm.haein.item.entity.Item;
 import ksm.haein.user.entity.Member;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String question;
+    private String title;
+
+    private String content;
 
     private String answer;
 
