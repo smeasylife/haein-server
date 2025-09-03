@@ -1,6 +1,7 @@
 package ksm.haein.user.entity;
 
 import jakarta.persistence.*;
+import ksm.haein.coupon.entity.MemberCoupon;
 import ksm.haein.like.entity.Like;
 import ksm.haein.review.entity.Review;
 import ksm.haein.user.enums.Role;
@@ -33,9 +34,15 @@ public class Member {
 
     private LocalDateTime createdAt;
 
+    private Integer point;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private ArrayList<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private ArrayList<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private ArrayList<MemberCoupon> coupons = new ArrayList<>();
+
 }

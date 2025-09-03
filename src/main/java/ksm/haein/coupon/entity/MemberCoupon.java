@@ -1,7 +1,6 @@
-package ksm.haein.qna.entity;
+package ksm.haein.coupon.entity;
 
 import jakarta.persistence.*;
-import ksm.haein.item.entity.Item;
 import ksm.haein.user.entity.Member;
 import lombok.Getter;
 
@@ -9,14 +8,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class Question {
+public class MemberCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String question;
-
-    private String answer;
 
     private LocalDateTime createdAt;
 
@@ -25,6 +20,6 @@ public class Question {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
 }
