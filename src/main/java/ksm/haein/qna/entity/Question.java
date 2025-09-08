@@ -3,10 +3,7 @@ package ksm.haein.qna.entity;
 import jakarta.persistence.*;
 import ksm.haein.item.entity.Item;
 import ksm.haein.user.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -35,4 +32,8 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    public void updateAnswer(String answer) {
+        this.answer = answer;
+    }
 }

@@ -1,5 +1,6 @@
 package ksm.haein.qna.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import ksm.haein.qna.dto.QuestionSaveData;
 import ksm.haein.qna.entity.Question;
 import ksm.haein.qna.repository.QuestionRepository;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
+    @Transactional
     public void save(QuestionSaveData questionSaveData) {
         Question question = Question.builder()
                 .title(questionSaveData.title())
@@ -22,5 +24,11 @@ public class QuestionService {
                 .createdAt(LocalDateTime.now()).build();
 
         questionRepository.save(question);
+    }
+
+    @Transactional
+    public void saveAnswer(Long id, String answer) {
+        Question question = questionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        question.updateAnswer(answer);
     }
 }
