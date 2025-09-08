@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -27,7 +29,11 @@ public class SecurityConfig {
     private static final List<WhiteList> WHITE_LISTS = List.of(
             new WhiteList(HttpMethod.POST, "/auth/kakao/login"),
             new WhiteList(HttpMethod.POST, "/signup/send-code"),
-            new WhiteList(HttpMethod.POST, "/signup/verify-code")
+            new WhiteList(HttpMethod.POST, "/signup/verify-code"),
+            new WhiteList(HttpMethod.GET, "/swagger-ui/**"),
+            new WhiteList(HttpMethod.OPTIONS, "/swagger-ui/**"),
+            new WhiteList(HttpMethod.GET, "/v3/api-docs/**"),
+            new WhiteList(HttpMethod.GET, "/v3/api-docs")
     );
 
     @Bean
@@ -65,3 +71,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

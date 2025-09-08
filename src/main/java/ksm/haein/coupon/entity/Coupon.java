@@ -21,6 +21,6 @@ public class Coupon {
 
     private LocalDateTime endTime;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "coupon", cascade = CascadeType.REMOVE)
     private ArrayList<MemberCoupon> coupons = new ArrayList<>();
 }
