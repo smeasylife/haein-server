@@ -3,6 +3,7 @@ package ksm.haein.review.service;
 import ksm.haein.item.entity.Item;
 import ksm.haein.item.repository.ItemRepository;
 import ksm.haein.review.entity.Review;
+import ksm.haein.review.entity.ReviewComment;
 import ksm.haein.review.repository.ReviewRepository;
 import ksm.haein.user.entity.Member;
 import ksm.haein.user.repository.MemberRepository;

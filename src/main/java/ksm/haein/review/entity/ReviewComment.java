@@ -1,10 +1,16 @@
 package ksm.haein.review.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +20,7 @@ public class ReviewComment {
 
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 }
