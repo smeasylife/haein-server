@@ -37,8 +37,45 @@ public class SecurityConfig {
     );
 
     @Bean
+    @Order(1)
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/admin/**")
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ROLE_ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("http://localhost:3000/admin/login")
+                        .loginProcessingUrl("/admin/login")
+                        .usernameParameter("email")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                        .deleteCookies("JSESSIONID")
+                )
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
+                .cors(cors -> cors
+                        .configurationSource(CorsConfig.corsConfigurationSource())
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation(f -> f.migrateSession())
+                        .maximumSessions(1).maxSessionsPreventsLogin(true)
+                );
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.httpBasic(AbstractHttpConfigurer::disable)
+        http.securityMatcher("/**")
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> {
                     WHITE_LISTS.forEach(whiteList ->
                             requests.requestMatchers(whiteList.method(), whiteList.url()).permitAll());
@@ -53,6 +90,7 @@ public class SecurityConfig {
                         .successHandler(authenticationSuccessHandler)
                 )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .invalidateHttpSession(true)
                         .logoutSuccessHandler(logoutSuccessHandler)
                         .deleteCookies("JSESSIONID")
