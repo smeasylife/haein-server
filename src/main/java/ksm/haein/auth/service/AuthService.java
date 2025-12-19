@@ -24,7 +24,7 @@ public class AuthService {
     private final KakaoUtils kakaoUtils;
     private final MemberService memberService;
 
-    public void doKakaoLogin(String code, HttpServletRequest request, HttpServletResponse response) {
+    public void doKakaoLogin(String code, HttpServletRequest request) {
         String accessToken = kakaoUtils.getAccessToken(code);
         KakaoUserInfo userInfo = kakaoUtils.getUserInfo(accessToken);
 

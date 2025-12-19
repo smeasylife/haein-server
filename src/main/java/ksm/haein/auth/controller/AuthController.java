@@ -6,22 +6,20 @@ import ksm.haein.auth.dto.KakaoAuthcode;
 import ksm.haein.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/kakao/login")
-    public ResponseEntity<String> getAuthCode(@RequestBody KakaoAuthcode kakaoAuthcode,
-                                              HttpServletRequest request,
-                                              HttpServletResponse response){
-        authService.doKakaoLogin(kakaoAuthcode.authcode(), request ,response);
+    public ResponseEntity<String> getAuthCode(KakaoAuthcode kakaoAuthcode, HttpServletRequest request){
+        authService.doKakaoLogin(kakaoAuthcode.code(), request);
         return ResponseEntity.ok().body("Login successful");
     }
 }
