@@ -22,6 +22,24 @@ public class DetailItemData {
     private List<ReviewDto> reviews;
     private List<QuestionDto> questions;
 
+    // For testing
+    public DetailItemData(Long itemId, String name, Integer price, Integer salePrice,
+                         Integer shippingPrice, String size, String color, String information,
+                         List<ItemPictureDto> itemPictures, List<ReviewDto> reviews,
+                         List<QuestionDto> questions) {
+        this.itemId = itemId;
+        this.name = name;
+        this.price = price;
+        this.salePrice = salePrice;
+        this.shippingPrice = shippingPrice;
+        this.size = size;
+        this.color = color;
+        this.information = information;
+        this.itemPictures = itemPictures;
+        this.reviews = reviews;
+        this.questions = questions;
+    }
+
     public DetailItemData(Item item) {
         this.itemId = item.getId();
         this.name = item.getName();

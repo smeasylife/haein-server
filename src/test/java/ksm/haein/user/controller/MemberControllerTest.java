@@ -24,7 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MemberController.class)
+@WebMvcTest(
+    controllers = MemberController.class,
+    excludeAutoConfiguration = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
+    }
+)
 @DisplayName("회원관리 컨트롤러 테스트")
 class MemberControllerTest {
 
@@ -47,12 +52,11 @@ class MemberControllerTest {
     @DisplayName("회원가입 - 성공")
     void testSignupSuccess() throws Exception {
         // Given
-        SignUpRequestForm signUpRequestForm = new SignUpRequestForm(
-                "testuser",
-                "test@example.com",
-                "password123!",
-                "01012345678"
-        );
+        SignUpRequestForm signUpRequestForm = new SignUpRequestForm();
+        signUpRequestForm.setNickname("testuser");
+        signUpRequestForm.setEmail("test@example.com");
+        signUpRequestForm.setPassword("password123!");
+        signUpRequestForm.setPhoneNumber("01012345678");
         doNothing().when(memberService).localSignup(any(SignUpRequestForm.class));
 
         // When & Then
@@ -67,12 +71,11 @@ class MemberControllerTest {
     @DisplayName("회원가입 - 실패 (이미 존재하는 회원)")
     void testSignupFailureMemberExists() throws Exception {
         // Given
-        SignUpRequestForm signUpRequestForm = new SignUpRequestForm(
-                "existinguser",
-                "existing@example.com",
-                "password123!",
-                "01012345678"
-        );
+        SignUpRequestForm signUpRequestForm = new SignUpRequestForm();
+        signUpRequestForm.setNickname("existinguser");
+        signUpRequestForm.setEmail("existing@example.com");
+        signUpRequestForm.setPassword("password123!");
+        signUpRequestForm.setPhoneNumber("01012345678");
         doThrow(new MemberAlreadyExistsException("Member already exists"))
                 .when(memberService).localSignup(any(SignUpRequestForm.class));
 
@@ -88,12 +91,11 @@ class MemberControllerTest {
     @DisplayName("회원가입 - 실패 (유효성 검증 실패)")
     void testSignupFailureValidation() throws Exception {
         // Given
-        SignUpRequestForm signUpRequestForm = new SignUpRequestForm(
-                "",  // 빈 닉네임
-                "invalid-email",  // 잘못된 이메일
-                "123",  // 짧은 비밀번호
-                ""  // 빈 전화번호
-        );
+        SignUpRequestForm signUpRequestForm = new SignUpRequestForm();
+        signUpRequestForm.setNickname("");  // 빈 닉네임
+        signUpRequestForm.setEmail("invalid-email");  // 잘못된 이메일
+        signUpRequestForm.setPassword("123");  // 짧은 비밀번호
+        signUpRequestForm.setPhoneNumber("");  // 빈 전화번호
 
         // When & Then
         mockMvc.perform(post("/signup")

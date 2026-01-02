@@ -26,7 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ItemController.class)
+@WebMvcTest(
+    controllers = ItemController.class,
+    excludeAutoConfiguration = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
+    }
+)
 @DisplayName("상품 컨트롤러 테스트")
 class ItemControllerTest {
 
@@ -101,7 +106,7 @@ class ItemControllerTest {
                 "L",
                 "빨강",
                 "상품 정보",
-                Arrays.asList("url1", "url2"),
+                List.of(),
                 List.of(),
                 List.of()
         );

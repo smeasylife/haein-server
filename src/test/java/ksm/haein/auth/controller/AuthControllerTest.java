@@ -20,7 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
+@WebMvcTest(
+    controllers = AuthController.class,
+    excludeAutoConfiguration = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
+    }
+)
 @DisplayName("인증 컨트롤러 테스트")
 class AuthControllerTest {
 
@@ -38,7 +43,7 @@ class AuthControllerTest {
     void testKakaoLoginSuccess() throws Exception {
         // Given
         String code = "test authorization code";
-        KakaoAuthcode kakaoAuthcode = new KakaoAuthcode(code);
+        KakaoAuthcode kakaoAuthcode = KakaoAuthcode.of(code, null, null, null);
         doNothing().when(authService).doKakaoLogin(eq(code), any());
 
         // When & Then
@@ -55,7 +60,7 @@ class AuthControllerTest {
     void testKakaoLoginFailure() throws Exception {
         // Given
         String code = "invalid code";
-        KakaoAuthcode kakaoAuthcode = new KakaoAuthcode(code);
+        KakaoAuthcode kakaoAuthcode = KakaoAuthcode.of(code, null, null, null);
         doThrow(new RuntimeException("Kakao login failed"))
                 .when(authService).doKakaoLogin(eq(code), any());
 
@@ -71,7 +76,7 @@ class AuthControllerTest {
     @DisplayName("카카오 로그인 - 실패 (코드 누락)")
     void testKakaoLoginMissingCode() throws Exception {
         // Given
-        KakaoAuthcode kakaoAuthcode = new KakaoAuthcode(null);
+        KakaoAuthcode kakaoAuthcode = KakaoAuthcode.of(null, null, null, null);
 
         // When & Then
         mockMvc.perform(post("/auth/kakao/login")

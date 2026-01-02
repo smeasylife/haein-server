@@ -19,10 +19,10 @@ public record KakaoUserInfo(
     public record Properties(String nickname) {}
 
     public String getEmail() {
-        return kakaoAccount.email();
+        return kakaoAccount != null ? kakaoAccount.email() : null;
     }
 
     public String getNickname() {
-        return properties.nickname();
+        return properties != null ? properties.nickname() : null;
     }
 }
