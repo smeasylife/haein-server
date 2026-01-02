@@ -15,10 +15,9 @@ public class CouponService {
     private final CouponRepository couponRepository;
 
     public void saveCoupon(CouponData couponData) {
-        if (couponData.type().equals("PERCENT")) {
-            couponRepository.save(getPercentCoupon(couponData));
-        } else if (couponData.type().equals("DISCOUNT")) {
-            couponRepository.save(getFixedCoupon(couponData));
+        switch (couponData.type()) {
+            case PERCENT -> couponRepository.save(getPercentCoupon(couponData));
+            case FIXED_AMOUNT -> couponRepository.save(getFixedCoupon(couponData));
         }
     }
 
