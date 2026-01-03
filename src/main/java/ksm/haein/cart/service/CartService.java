@@ -37,7 +37,7 @@ public class CartService {
     private void validateCartIfAlreadyExist(long memberId) {
         Optional<Cart> cart = cartRepository.findByMemberId(memberId);
 
-        if (!cart.isPresent()) {
+        if (cart.isPresent()) {
             throw new CartAlreadyExistsException("이미 장바구니에 담긴 상품입니다");
         }
     }
