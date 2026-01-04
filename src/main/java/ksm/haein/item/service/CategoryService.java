@@ -25,12 +25,6 @@ public class CategoryService {
                 .toList();
     }
 
-    public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found: " + id));
-        return new CategoryDto(category);
-    }
-
     @Transactional
     public Long createCategory(CategoryCreateRequest request) {
         Category parent = null;

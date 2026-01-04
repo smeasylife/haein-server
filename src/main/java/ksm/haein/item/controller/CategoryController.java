@@ -23,11 +23,6 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/{id}")
-    public CategoryDto getCategoryById(@PathVariable Long id) {
-        return categoryService.getCategoryById(id);
-    }
-
     @PostMapping
     public ResponseEntity<Long> createCategory(@Valid @RequestBody CategoryCreateRequest request) {
         Long categoryId = categoryService.createCategory(request);
