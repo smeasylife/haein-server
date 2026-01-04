@@ -100,6 +100,7 @@ class ItemServiceTest {
         when(mockItem.getSize()).thenReturn("L");
         when(mockItem.getColor()).thenReturn("빨강");
         when(mockItem.getInformation()).thenReturn("상품 정보");
+        when(mockItem.getShippingInfo()).thenReturn("결제 확인 후 1~2일 이내 발송됩니다.");
         when(mockItem.getPictures()).thenReturn(new ArrayList<>());
         when(mockItem.getReviews()).thenReturn(new ArrayList<>());
         when(mockItem.getQuestions()).thenReturn(new ArrayList<>());

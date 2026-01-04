@@ -25,17 +25,13 @@ public class Item {
 
     private String name;
 
-    private Integer price;
-
-    private Integer salePrice;
+    private Integer basePrice;
 
     private Integer shippingPrice;
 
-    private String size;
-
-    private String color;
-
     private String information;
+
+    private String shippingInfo;
 
     private LocalDateTime createdAt;
 
@@ -54,28 +50,21 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private ArrayList<Question> questions = new ArrayList<>();
 
-    public void update(String name, Integer price, Integer salePrice, Integer shippingPrice,
-                      String size, String color, String information) {
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private ArrayList<ItemOption> itemOptions = new ArrayList<>();
+
+    public void update(String name, Integer shippingPrice, String information, String shippingInfo) {
         if (name != null) {
             this.name = name;
-        }
-        if (price != null) {
-            this.price = price;
-        }
-        if (salePrice != null) {
-            this.salePrice = salePrice;
         }
         if (shippingPrice != null) {
             this.shippingPrice = shippingPrice;
         }
-        if (size != null) {
-            this.size = size;
-        }
-        if (color != null) {
-            this.color = color;
-        }
         if (information != null) {
             this.information = information;
+        }
+        if (shippingInfo != null) {
+            this.shippingInfo = shippingInfo;
         }
     }
 }

@@ -4,14 +4,16 @@ import jakarta.persistence.EntityNotFoundException;
 import ksm.haein.item.dto.DetailItemData;
 import ksm.haein.item.dto.ItemCreateRequest;
 import ksm.haein.item.dto.ItemData;
+import ksm.haein.item.dto.ItemOptionRequest;
 import ksm.haein.item.dto.ItemUpdateRequest;
 import ksm.haein.item.entity.Category;
 import ksm.haein.item.entity.Item;
 import ksm.haein.item.entity.ItemCategory;
+import ksm.haein.item.entity.ItemOption;
 import ksm.haein.item.entity.ItemPicture;
-import ksm.haein.item.enums.CategoryName;
 import ksm.haein.item.repository.CategoryRepository;
 import ksm.haein.item.repository.ItemCategoryRepository;
+import ksm.haein.item.repository.ItemOptionRepository;
 import ksm.haein.item.repository.ItemPictureRepository;
 import ksm.haein.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
     private final ItemPictureRepository itemPictureRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final ItemOptionRepository itemOptionRepository;
 
     public List<ItemData> getItemDataWithoutLike(int page) {
         Pageable pageable = PageRequest.of(page, 12);
@@ -59,12 +62,9 @@ public class ItemService {
     public Long createItem(ItemCreateRequest request) {
         Item item = Item.builder()
                 .name(request.name())
-                .price(request.price())
-                .salePrice(request.salePrice())
                 .shippingPrice(request.shippingPrice())
-                .size(request.size())
-                .color(request.color())
                 .information(request.information())
+                .shippingInfo(request.shippingInfo())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -78,7 +78,7 @@ public class ItemService {
             itemPictureRepository.save(picture);
         }
 
-        for (CategoryName categoryName : request.categories()) {
+        for (String categoryName : request.categories()) {
             Category category = categoryRepository.findByName(categoryName)
                     .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryName));
 
@@ -87,6 +87,17 @@ public class ItemService {
                     .category(category)
                     .build();
             itemCategoryRepository.save(itemCategory);
+        }
+
+        for (ItemOptionRequest optionRequest : request.itemOptions()) {
+            ItemOption itemOption = ItemOption.builder()
+                    .size(optionRequest.size())
+                    .color(optionRequest.color())
+                    .price(optionRequest.price())
+                    .stock(optionRequest.stock())
+                    .item(item)
+                    .build();
+            itemOptionRepository.save(itemOption);
         }
 
         return item.getId();
@@ -99,12 +110,9 @@ public class ItemService {
 
         item.update(
                 request.name(),
-                request.price(),
-                request.salePrice(),
                 request.shippingPrice(),
-                request.size(),
-                request.color(),
-                request.information()
+                request.information(),
+                request.shippingInfo()
         );
 
         if (request.pictureUrls() != null) {
@@ -115,29 +123,33 @@ public class ItemService {
             updateItemCategories(item, request.categories());
         }
 
+        if (request.itemOptions() != null) {
+            updateItemOptions(item, request.itemOptions());
+        }
+
         itemRepository.save(item);
     }
 
-    private void updateItemCategories(Item item, List<CategoryName> requestedCategories) {
+    private void updateItemCategories(Item item, List<String> requestedCategories) {
         List<ItemCategory> existingCategories = itemCategoryRepository.findAllByItem(item);
 
-        Set<CategoryName> existingNames = existingCategories.stream()
+        Set<String> existingNames = existingCategories.stream()
                 .map(ic -> ic.getCategory().getName())
                 .collect(Collectors.toSet());
 
-        Set<CategoryName> toAdd = new HashSet<>(requestedCategories);
+        Set<String> toAdd = new HashSet<>(requestedCategories);
         toAdd.removeAll(existingNames);
 
-        Set<CategoryName> toRemove = new HashSet<>(existingNames);
+        Set<String> toRemove = new HashSet<>(existingNames);
         toRemove.removeAll(requestedCategories);
 
-        for (CategoryName categoryName : toRemove) {
+        for (String categoryName : toRemove) {
             Category category = categoryRepository.findByName(categoryName)
                     .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryName));
             itemCategoryRepository.deleteByItemAndCategory(item, category);
         }
 
-        for (CategoryName categoryName : toAdd) {
+        for (String categoryName : toAdd) {
             Category category = categoryRepository.findByName(categoryName)
                     .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryName));
             ItemCategory itemCategory = ItemCategory.builder()
@@ -171,6 +183,24 @@ public class ItemService {
                     .item(item)
                     .build();
             itemPictureRepository.save(picture);
+        }
+    }
+
+    private void updateItemOptions(Item item, List<ItemOptionRequest> requestedOptions) {
+        List<ItemOption> existingOptions = itemOptionRepository.findAllByItemId(item.getId());
+
+        // 기존 옵션 모두 삭제 후 다시 생성 (단순화 접근)
+        itemOptionRepository.deleteAllByItemId(item.getId());
+
+        for (ItemOptionRequest optionRequest : requestedOptions) {
+            ItemOption itemOption = ItemOption.builder()
+                    .size(optionRequest.size())
+                    .color(optionRequest.color())
+                    .price(optionRequest.price())
+                    .stock(optionRequest.stock())
+                    .item(item)
+                    .build();
+            itemOptionRepository.save(itemOption);
         }
     }
 }

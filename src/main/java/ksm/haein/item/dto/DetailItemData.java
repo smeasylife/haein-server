@@ -12,43 +12,37 @@ import java.util.stream.Collectors;
 public class DetailItemData {
     private Long itemId;
     private String name;
-    private Integer price;
-    private Integer salePrice;
     private Integer shippingPrice;
-    private String size;
-    private String color;
     private String information;
+    private String shippingInfo;
     private List<ItemPictureDto> itemPictures;
     private List<ReviewDto> reviews;
     private List<QuestionDto> questions;
+    private List<ItemOptionDto> itemOptions;
 
     // For testing
-    public DetailItemData(Long itemId, String name, Integer price, Integer salePrice,
-                         Integer shippingPrice, String size, String color, String information,
+    public DetailItemData(Long itemId, String name, Integer shippingPrice, String information,
+                         String shippingInfo,
                          List<ItemPictureDto> itemPictures, List<ReviewDto> reviews,
-                         List<QuestionDto> questions) {
+                         List<QuestionDto> questions, List<ItemOptionDto> itemOptions) {
         this.itemId = itemId;
         this.name = name;
-        this.price = price;
-        this.salePrice = salePrice;
         this.shippingPrice = shippingPrice;
-        this.size = size;
-        this.color = color;
         this.information = information;
+        this.shippingInfo = shippingInfo;
         this.itemPictures = itemPictures;
         this.reviews = reviews;
         this.questions = questions;
+        this.itemOptions = itemOptions;
     }
 
-    public DetailItemData(Item item) {
+    public
+    DetailItemData(Item item) {
         this.itemId = item.getId();
         this.name = item.getName();
-        this.price = item.getPrice();
-        this.salePrice = item.getSalePrice();
         this.shippingPrice = item.getShippingPrice();
-        this.size = item.getSize();
-        this.color = item.getColor();
         this.information = item.getInformation();
+        this.shippingInfo = item.getShippingInfo();
         this.itemPictures = item.getPictures().stream()
                 .map(ItemPictureDto::new)
                 .collect(Collectors.toList());
@@ -57,6 +51,9 @@ public class DetailItemData {
                 .collect(Collectors.toList());
         this.questions = item.getQuestions().stream()
                 .map(QuestionDto::new)
+                .collect(Collectors.toList());
+        this.itemOptions = item.getItemOptions().stream()
+                .map(ItemOptionDto::new)
                 .collect(Collectors.toList());
     }
 }

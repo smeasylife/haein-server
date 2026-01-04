@@ -8,17 +8,21 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemPicture {
+@NoArgsConstructor
+@Builder
+public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String url;
+    private String size;
 
-    private Integer order;
+    private String color;
+
+    private Integer price;
+
+    private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
