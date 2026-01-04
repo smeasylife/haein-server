@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import ksm.haein.like.entity.Like;
 import ksm.haein.qna.entity.Question;
 import ksm.haein.review.entity.Review;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
@@ -12,6 +15,9 @@ import java.util.ArrayList;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +53,29 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private ArrayList<Question> questions = new ArrayList<>();
+
+    public void update(String name, Integer price, Integer salePrice, Integer shippingPrice,
+                      String size, String color, String information) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+        if (salePrice != null) {
+            this.salePrice = salePrice;
+        }
+        if (shippingPrice != null) {
+            this.shippingPrice = shippingPrice;
+        }
+        if (size != null) {
+            this.size = size;
+        }
+        if (color != null) {
+            this.color = color;
+        }
+        if (information != null) {
+            this.information = information;
+        }
+    }
 }

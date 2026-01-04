@@ -1,89 +1,320 @@
 # Haein 쇼핑몰 서버
 
-## 개요
+## 📋 프로젝트 개요
 
-Haein은 Spring Boot 기반의 쇼핑몰 서버로, 현대적인 e-commerce 플랫폼의 핵심 기능들을 제공합니다. 사용자들은 편리하게 쇼핑을 즐기고, 관리자는 효율적으로 상품과 고객을 관리할 수 있습니다.
+Haein은 Spring Boot 3.5.3 기반의 e-commerce 쇼핑몰 백엔드 서버입니다. RESTful API 아키텍처를 따르며, 사용자 인증, 상품 관리, 주문, 리뷰, Q&A 등 쇼핑몰의 핵심 기능을 제공합니다.
 
-### 주요 기능
-- 🔐 **사용자 인증**: 로컬 회원가입 및 카카오 OAuth 로그인
-- 🛍️ **상품 관리**: 상품 목록, 상세 정보, 카테고리별 조회
-- 🛒 **쇼핑 카트**: 장바구니 기능
-- ❤️ **좋아요 시스템**: 상품 좋아요/취소 기능
-- ⭐ **리뷰 시스템**: 상품 리뷰 및 댓글 기능
-- ❓ **고객 지원**: Q&A 질문답변 시스템
-- 🎫 **프로모션**: 쿠폰 발급 및 관리
+**API 명세서**: 별도의 `API.md` 파일에 상세한 API 엔드포인트 문서가 있습니다.
 
-### 기술 스택
+---
+
+## 🛠️ 기술 스택
+
+### Core
 - **Framework**: Spring Boot 3.5.3
 - **Language**: Java 17
-- **Security**: Spring Security + Custom Authentication
-- **Database**: MySQL + JPA/Hibernate
-- **Cache**: Redis
-- **Mail**: Spring Boot Mail
-- **Build**: Gradle
+- **Build**: Gradle (Kotlin DSL)
+
+### Database & Cache
+- **RDBMS**: MySQL (JPA/Hibernate)
+- **Cache**: Redis (세션 관리, 인증 코드 캐싱)
+
+### Security
+- **Spring Security 6**: JWT 기반 인증/인가
+- **OAuth 2.0**: 카카오 소셜 로그인
+- **Password Encryption**: BCrypt
+
+### Communication
+- **Email**: Spring Boot Mail (Gmail SMTP)
+- **API**: RESTful API
 
 ---
 
-## API 명세서
+## 📁 패키지 구조
 
-### 🔐 인증 (Authentication)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/auth/kakao/login` | `{ "code": "string" }` | `"Login successful"` |
-
-### 👤 회원관리 (Member)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/signup` | `{ "nickname": "string", "email": "string", "password": "string", "phoneNumber": "string" }` | `204 NO CONTENT` |
-| POST | `/signup/send-code` | `email=string` (query) | `"인증 번호 전송 성공"` |
-| POST | `/signup/verify-code` | `{ "email": "string", "code": "string" }` | `"인증 성공"` |
-
-### 🛍️ 상품 (Items)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| GET | `/items?page={page}` | - | `[{ "id": 1, "name": "string", "price": 10000, "salePrice": 8000, "color": "string", "pictureUrl": "string", "like": false }]` |
-| GET | `/items/{itemId}` | - | `{ "itemId": 1, "name": "string", "price": 10000, "salePrice": 8000, "shippingPrice": 2500, "size": "string", "color": "string", "information": "string", "itemPictures": [{"url": "string"}], "reviews": [{"content": "string", "createdAt": "2023-12-19T10:00:00"}], "questions": [{"content": "string", "answer": "string", "createdAt": "2023-12-19T10:00:00"}] }` |
-
-### 🛒 장바구니 (Cart)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/{itemId}/cart` | - (인증 필요) | `204 NO CONTENT` |
-
-### ❤️ 좋아요 (Like)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/{itemId}/like` | - (인증 필요) | `201 CREATED` |
-
-### ⭐ 리뷰 (Review)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/{itemId}/review` | `"string"` (리뷰 내용) | `201 CREATED` |
-| POST | `/{reviewId}/comment` | `{ "comment": "string" }` | `200 OK` |
-
-### ❓ Q&A (Customer Support)
-| 메서드 | 엔드포인트 | 요청 | 응답 |
-|--------|------------|------|------|
-| POST | `/question` | `{ "title": "string", "content": "string" }` | `201 CREATED` |
-| POST | `/answer/{questionId}` | `answer=string` (query) | `200 OK` |
-
-### 🎫 쿠폰 (Coupon)
-| 메서드 | 엔드포인트 | 요청                                                                                                                                          | 응답 |
-|--------|------------|---------------------------------------------------------------------------------------------------------------------------------------------|------|
-| POST | `/coupon` | `{ "name": "string", "type": "PERCENT/FIXED_AMOUNT", "value": 1000, "startTime": "2023-12-19T10:00:00", "endTime": "2023-12-25T23:59:59" }` | `"Coupon Saved"` |
+```
+src/main/java/ksm/haein/
+├── auth/               # 인증 관련
+│   └── kakao/         # 카카오 OAuth
+├── config/            # 설정
+│   ├── security/     # 시큐리티 설정
+│   └── redis/        # Redis 설정
+├── exception/         # 예외 처리
+│   └── handler/      # 글로벌 예외 핸들러
+├── coupon/            # 쿠폰
+├── item/              # 상품
+│   ├── controller/
+│   ├── service/
+│   ├── repository/
+│   ├── entity/
+│   ├── dto/
+│   └── enums/
+├── like/              # 좋아요
+├── qna/               # Q&A
+├── review/            # 리뷰
+├── mail/              # 메일 발송
+├── cart/              # 장바구니
+└── user/              # 사용자 (회원)
+    └── exception/     # 사용자 관련 커스텀 예외
+```
 
 ---
 
-## 보안 특징
+## 🎯 코딩 컨벤션 & 패턴
 
-- **Spring Security**: 사용자 인증 및 권한 관리
-- **OAuth 2.0**: 카카오 소셜 로그인 연동
-- **이메일 인증**: Redis 기반 임시 코드 저장
-- **비밀번호 암호화**: 안전한 비밀번호 저장
-- **CORS 설정**: 웹 프론트엔드와의 안전한 통신
+### 1. Entity 패턴
+- 모든 Entity는 **Lombok** 사용:
+  ```java
+  @Entity
+  @Getter
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public class Item {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      private Long id;
 
-## 데이터 관리
+      private String name;
+      // ...
+  }
+  ```
 
-- **JPA/Hibernate**: 객체 관계형 매핑
-- **Redis**: 세션 관리 및 인증 코드 캐싱
-- **MySQL**: 기본 데이터베이스
-- **파일 업로드**: 상품 이미지 처리
+### 2. Repository 패턴
+- `JpaRepository` 상속
+- 커스텀 쿼리 메서드는 명확한 네이밍:
+  ```java
+  public interface ItemRepository extends JpaRepository<Item, Long> {
+      Optional<Item> findByName(String name);
+      Page<ItemData> findItemByPageWithoutLike(Pageable pageable);
+  }
+  ```
+
+### 3. Service 패턴
+- 클래스 레벨 `@Transactional(readOnly = true)`
+- 쓰기 메서드는 `@Transactional` 명시
+- 의존성은 `final` + `@RequiredArgsConstructor`:
+  ```java
+  @Service
+  @RequiredArgsConstructor
+  @Transactional(readOnly = true)
+  public class ItemService {
+      private final ItemRepository itemRepository;
+      private final CategoryRepository categoryRepository;
+
+      @Transactional
+      public Long createItem(ItemCreateRequest request) {
+          // ...
+      }
+  }
+  ```
+
+### 4. Controller 패턴
+- `@RestController` + `@RequiredArgsConstructor`
+- 인증이 필요한 경우: `@AuthenticationPrincipal CustomUser`
+- Validation: `@Valid` + DTO:
+  ```java
+  @RestController
+  @RequiredArgsConstructor
+  public class ItemController {
+      private final ItemService itemService;
+
+      @PostMapping("/items")
+      public ResponseEntity<Long> createItem(
+          @Valid @RequestBody ItemCreateRequest request
+      ) {
+          Long itemId = itemService.createItem(request);
+          return ResponseEntity.status(HttpStatus.CREATED).body(itemId);
+      }
+  }
+  ```
+
+### 5. DTO 패턴
+- **간단한 데이터**: `record` 사용
+- **복잡한 데이터**: `@Data` class 사용
+- Validation 어노테이션 활용:
+  ```java
+  public record ItemCreateRequest(
+      @NotBlank(message = "상품명은 필수입니다.")
+      String name,
+
+      @NotNull(message = "가격은 필수입니다.")
+      @Positive(message = "가격은 양수여야 합니다.")
+      Integer price
+  ) {}
+  ```
+
+### 6. Exception Handling
+
+**글로벌 예외 처리:**
+- `@RestControllerAdvice` 사용한 중앙 집중식 예외 처리
+- **GlobalExceptionHandler** (`src/main/java/ksm/haein/exception/handler/GlobalExceptionHandler.java`)
+
+**커스텀 예외:**
+- `MemberAlreadyExistsException` - 이메일 중복 (406 Not Acceptable)
+- `MailSendException` - 이메일 발송 실패
+- `CartAlreadyExistsException` - 장바구니 중복
+- `KakaoAccessTokenRequestException` - 카카오 OAuth 토큰 요청 실패
+
+**JPA 기본 예외:**
+- `EntityNotFoundException` - 엔티티 조회 실패 시
+
+**사용 예시:**
+```java
+// Service에서 예외 발생
+throw new EntityNotFoundException("Item not found: " + itemId);
+throw new MemberAlreadyExistsException("Email already exists: " + email);
+
+// GlobalExceptionHandler가 자동으로 처리
+// 클라이언트에는 적절한 HTTP Status와 에러 메시지 반환
+```
+
+---
+
+## 🗄️ 데이터베이스 관계
+
+### 주요 Entity 관계
+```
+Item (1) ────< (N) ItemPicture
+Item (N) >───< (M) Category (via ItemCategory)
+Item (1) ────< (N) Like
+Item (1) ────< (N) Review
+Item (1) ────< (N) Question
+
+Member (1) ────< (N) Like
+Member (1) ────< (N) Review
+Member (1) ────< (N) Question
+Member (1) ────< (N) Cart
+
+Item (N) >───< (M) Member (via Cart)
+```
+
+### CascadeType 설정
+- **REMOVE**: 부모 삭제 시 자식도 삭제 (ItemPicture, Like, Review, Question)
+- **LAZY fetch**: 연관 관계는 지연 로딩 (ManyToOne 관계)
+
+---
+
+## 🔐 보안 및 인증
+
+### 세션 관리
+- **Redis 기반 세션**: Spring Session + Redis 사용
+- 세션 TTL 설정으로 자동 만료
+- 분산 환경에서도 세션 공유 가능
+
+### 역할 (Roles)
+| 역할 | 설명 |
+|------|------|
+| `ROLE_USER` | 일반 사용자 - 상품 조회, 장바구니, 리뷰 작성 등 |
+| `ROLE_ADMIN` | 관리자 - 상품 등록/수정, Q&A 답변, 쿠폰 관리 등 |
+
+### 인증 방식
+- **로컬 인증**: 이메일 + 비밀번호 (BCrypt 암호화)
+- **카카오 OAuth**: 소셜 로그인 지원
+
+### Controller에서 인증 확인
+```java
+// 인증된 사용자 정보 접근
+@GetMapping("/items")
+public List<ItemData> getItems(
+    @RequestParam int page,
+    @AuthenticationPrincipal CustomUser customUser  // 인증된 사용자
+) {
+    if (customUser == null) {
+        // 비회원 처리
+        return itemService.getItemDataWithoutLike(page);
+    }
+    // 회원 처리
+    return itemService.getItemDataWithLike(page, customUser.getId());
+}
+```
+
+### 접근 제어
+- 인증 필요 없는 엔드포인트: `permitAll()` 설정
+- 인증 필요한 엔드포인트: `@AuthenticationPrincipal`으로 사용자 확인
+- 관리자 전용 엔드포인트: ROLE_ADMIN 권한 확인 (추가 예정)
+
+---
+
+## 📝 개발 가이드
+
+### 새로운 기능 추가 시
+
+1. **Entity 생성** (데이터베이스 스키마)
+2. **Repository 생성** (데이터 접근)
+3. **DTO 생성** (요청/응답)
+4. **Service 구현** (비즈니스 로직)
+5. **Controller 구현** (API 엔드포인트)
+6. **커스텀 예외 필요 시 생성** (예외 처리)
+7. **GlobalExceptionHandler에 예외 핸들러 추가** (필요 시)
+8. **테스트 코드 작성** (단위 테스트)
+
+### 주요 의존성 주의사항
+
+- **Entity 관계**: `@ManyToOne`은 LAZY fetch 사용
+- **일관성**: 모든 Entity는 Builder 패턴 사용
+- **Transaction**: 읽기는 `readOnly = true`, 쓰기는 별도 `@Transactional`
+- **Validation**: 모든 Request DTO는 `@Valid` 검증
+- **Exception Handler**: 새로운 커스텀 예외는 `GlobalExceptionHandler`에 등록
+
+### 커스텀 예외 만들기
+```java
+// 1. 예외 클래스 생성
+public class CustomException extends RuntimeException {
+    public CustomException(String message) {
+        super(message);
+    }
+}
+
+// 2. GlobalExceptionHandler에 핸들러 추가
+@ExceptionHandler(CustomException.class)
+public ResponseEntity<String> handleCustomException(Exception ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+}
+
+// 3. Service에서 사용
+throw new CustomException("Something went wrong");
+```
+
+### Redis 활용
+- 이메일 인증 코드 저장 (TTL 5분)
+- 세션 관리
+- (추가 예정) 캐싱
+
+---
+
+## 🧪 테스트
+
+### 테스트 패턴
+- 단위 테스트: Service layer
+- 통합 테스트: Controller layer (MockMvc)
+- Repository 테스트: @DataJpaTest
+
+### 테스트 코드 위치
+- `src/test/java/ksm/haein/`
+- 각 패키지별 테스트 코드 동일한 구조
+
+---
+
+## 🚀 실행 방법
+
+### 개발 환경
+```bash
+# PostgreSQL/MySQL 실행
+# Redis 실행
+./gradlew bootRun
+```
+
+### 환경 변수
+- `application.yml` 또는 환경 변수로 설정
+- DB 연결 정보
+- Redis 연결 정보
+- OAuth 클라이언트 정보
+
+---
+
+## 📚 추가 문서
+
+- **API 명세서**: `API.md` (모든 REST API 엔드포인트)
+- **데이터베이스 스키마**: `DATABASE_SCHEMA.md` (전체 테이블 구조, ERD, 관계)
+- **배포 가이드**: (추가 예정)
