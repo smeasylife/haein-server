@@ -1,11 +1,14 @@
 package ksm.haein.user.service;
 
+import ksm.haein.user.dto.MemberData;
 import ksm.haein.user.dto.MemberLoginData;
 import ksm.haein.user.dto.SignUpRequestForm;
 import ksm.haein.user.entity.Member;
 import ksm.haein.user.exception.MemberAlreadyExistsException;
 import ksm.haein.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,5 +65,9 @@ public class MemberService {
 
     public MemberLoginData getMemberLoginData(String email) {
         return memberRepository.findMemberLoginDataByEmail(email).orElseThrow(MemberAlreadyExistsException::new);
+    }
+
+    public Page<MemberData> getMembersByPage(Pageable pageable) {
+        return memberRepository.findMemberDataByPage(pageable);
     }
 }

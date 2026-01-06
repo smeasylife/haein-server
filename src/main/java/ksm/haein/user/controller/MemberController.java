@@ -1,18 +1,19 @@
 package ksm.haein.user.controller;
 
 import jakarta.validation.Valid;
-import ksm.haein.config.redis.RedisService;
+import ksm.haein.user.dto.MemberData;
 import ksm.haein.user.dto.SignUpRequestForm;
 import ksm.haein.user.dto.UserVerificationCode;
 import ksm.haein.user.service.MailService;
 import ksm.haein.user.service.MemberService;
+import ksm.haein.config.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +41,16 @@ public class MemberController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 번호 매치 실패");
         }
+    }
+
+    @GetMapping("/members")
+    public ResponseEntity<Page<MemberData>> getMembers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<MemberData> members = memberService.getMembersByPage(pageRequest);
+        return ResponseEntity.ok(members);
     }
 
 }
